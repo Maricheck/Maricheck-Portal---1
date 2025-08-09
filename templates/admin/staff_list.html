@@ -1,0 +1,120 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-navy mb-0">
+                <i class="fas fa-user-tie me-2"></i>Staff Members
+            </h1>
+            <a href="{{ url_for('export_staff_csv') }}" class="btn btn-outline-success">
+                <i class="fas fa-download me-1"></i>Export CSV
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" name="search" class="form-control" 
+                       placeholder="Name, position, or department..." 
+                       value="{{ search }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Status Filter</label>
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="1" {{ 'selected' if status_filter == '1' }}>Screening</option>
+                    <option value="3" {{ 'selected' if status_filter == '3' }}>Approved</option>
+                    <option value="-1" {{ 'selected' if status_filter == '-1' }}>Rejected</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="fas fa-search me-1"></i>Filter
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url_for('staff_list') }}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-times me-1"></i>Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Staff List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        {% if staff_members %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Location</th>
+                        <th>Experience</th>
+                        <th>Status</th>
+                        <th>Registered</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in staff_members %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle bg-success bg-opacity-10 text-success me-2">
+                                    {{ staff.full_name[0] }}
+                                </div>
+                                <div>
+                                    <strong>{{ staff.full_name }}</strong>
+                                    <br><small class="text-muted">{{ staff.email_or_whatsapp }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ staff.position_applying }}</td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                {{ staff.department }}
+                            </span>
+                        </td>
+                        <td>{{ staff.location }}</td>
+                        <td>{{ staff.years_experience }} years</td>
+                        <td>
+                            <span class="badge bg-{{ staff.get_status_class() }}">
+                                {{ staff.get_status_name() }}
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                {{ staff.created_at.strftime('%b %d, %Y') }}
+                            </small>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('staff_profile', staff_id=staff.id) }}" 
+                               class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No staff members found</h5>
+            <p class="text-muted">Try adjusting your search criteria or clear filters.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

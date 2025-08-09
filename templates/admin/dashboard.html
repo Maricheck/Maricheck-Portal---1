@@ -1,0 +1,204 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="h3 text-navy mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard Overview
+        </h1>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                        <i class="fas fa-users fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1">{{ total_crew }}</h3>
+                        <small class="text-muted">Total Crew</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-circle me-3">
+                        <i class="fas fa-clock fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1">{{ crew_screening }}</h3>
+                        <small class="text-muted">Crew Screening</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-success bg-opacity-10 text-success rounded-circle me-3">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1">{{ crew_approved }}</h3>
+                        <small class="text-muted">Crew Approved</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-info bg-opacity-10 text-info rounded-circle me-3">
+                        <i class="fas fa-user-tie fa-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1">{{ total_staff }}</h3>
+                        <small class="text-muted">Total Staff</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0 text-navy">
+                    <i class="fas fa-users me-2"></i>Recent Crew Registrations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_crew %}
+                    {% for crew in recent_crew %}
+                    <div class="d-flex align-items-center mb-3 {% if not loop.last %}border-bottom pb-3{% endif %}">
+                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
+                            {{ crew.name[0] }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ crew.name }}</h6>
+                            <small class="text-muted">{{ crew.rank }} | {{ crew.passport }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ crew.get_status_class() }}">
+                                {{ crew.get_status_name() }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('crew_list') }}" class="btn btn-outline-primary btn-sm">
+                            View All Crew
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                        <p>No crew registrations yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0 text-navy">
+                    <i class="fas fa-user-tie me-2"></i>Recent Staff Registrations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_staff %}
+                    {% for staff in recent_staff %}
+                    <div class="d-flex align-items-center mb-3 {% if not loop.last %}border-bottom pb-3{% endif %}">
+                        <div class="avatar-circle bg-success bg-opacity-10 text-success me-3">
+                            {{ staff.full_name[0] }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ staff.full_name }}</h6>
+                            <small class="text-muted">{{ staff.position_applying }} | {{ staff.department }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ staff.get_status_class() }}">
+                                {{ staff.get_status_name() }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('staff_list') }}" class="btn btn-outline-success btn-sm">
+                            View All Staff
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-user-tie fa-3x mb-3 opacity-50"></i>
+                        <p>No staff registrations yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0 text-navy">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('crew_list') }}?status=1" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-search me-2"></i>
+                            Review Screening
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('export_crew_csv') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-download me-2"></i>
+                            Export Crew Data
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('export_staff_csv') }}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-download me-2"></i>
+                            Export Staff Data
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-globe me-2"></i>
+                            View Public Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

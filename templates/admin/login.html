@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Maricheck{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-navy text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Admin Login
+                    </h3>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label fw-bold") }}
+                            {{ form.username(class="form-control form-control-lg" + (" is-invalid" if form.username.errors else "")) }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">{{ form.username.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form.password.label(class="form-label fw-bold") }}
+                            {{ form.password(class="form-control form-control-lg" + (" is-invalid" if form.password.errors else ""), type="password") }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">{{ form.password.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-navy btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-3">
+                <a href="{{ url_for('index') }}" class="text-muted">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Homepage
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

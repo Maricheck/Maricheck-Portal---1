@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Access Forbidden - Maricheck{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-navy-blue">403</h1>
+                <h2 class="mb-4">Access Forbidden</h2>
+                <p class="lead text-muted mb-4">
+                    You don't have permission to access this resource.
+                </p>
+                <a href="{{ url_for('index') }}" class="btn btn-navy-blue">
+                    <i class="fas fa-home me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

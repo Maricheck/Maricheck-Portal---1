@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Track Application Status - Maricheck{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-navy text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-search me-2"></i>
+                        Track Application Status
+                    </h2>
+                    <p class="mb-0 mt-2 opacity-75">Enter your passport number to check your application status</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                {{ form.passport.label(class="form-label fw-bold") }}
+                                {{ form.passport(class="form-control form-control-lg" + (" is-invalid" if form.passport.errors else ""), placeholder="Enter your passport number") }}
+                                {% if form.passport.errors %}
+                                    <div class="invalid-feedback">{{ form.passport.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-sea-green btn-lg") }}
+                        </div>
+                    </form>
+                    
+                    {% if crew_member %}
+                    <div class="mt-5">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h4 class="text-navy mb-4">
+                                    <i class="fas fa-user-tie me-2"></i>
+                                    Application Details
+                                </h4>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <strong>Name:</strong> {{ crew_member.name }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Rank:</strong> {{ crew_member.rank }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Passport:</strong> {{ crew_member.passport }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Nationality:</strong> {{ crew_member.nationality }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Registration Date:</strong> {{ crew_member.created_at.strftime('%B %d, %Y') }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Status:</strong>
+                                        <span class="badge bg-{{ crew_member.get_status_class() }} ms-2">
+                                            {{ crew_member.get_status_name() }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status Timeline -->
+                                <div class="mt-4">
+                                    <h5 class="text-navy mb-3">Application Progress</h5>
+                                    <div class="status-timeline">
+                                        <div class="timeline-item {{ 'active' if crew_member.status >= 0 else '' }}">
+                                            <div class="timeline-marker {{ 'bg-success' if crew_member.status >= 0 else 'bg-secondary' }}"></div>
+                                            <div class="timeline-content">
+                                                <h6>Registered</h6>
+                                                <p class="text-muted mb-0">Application submitted successfully</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item {{ 'active' if crew_member.status >= 1 else '' }}">
+                                            <div class="timeline-marker {{ 'bg-success' if crew_member.status >= 1 else 'bg-secondary' }}"></div>
+                                            <div class="timeline-content">
+                                                <h6>Screening</h6>
+                                                <p class="text-muted mb-0">Application under review</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item {{ 'active' if crew_member.status >= 2 else '' }}">
+                                            <div class="timeline-marker {{ 'bg-success' if crew_member.status >= 2 else 'bg-secondary' }}"></div>
+                                            <div class="timeline-content">
+                                                <h6>Documents Verified</h6>
+                                                <p class="text-muted mb-0">All documents verified</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-item {{ 'active' if crew_member.status >= 3 else '' }}">
+                                            <div class="timeline-marker {{ 'bg-success' if crew_member.status >= 3 else 'bg-secondary' }}"></div>
+                                            <div class="timeline-content">
+                                                <h6>Approved</h6>
+                                                <p class="text-muted mb-0">Ready for deployment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Note about document uploads -->
+                                <div class="mt-4 p-3 bg-white rounded border">
+                                    <h6 class="text-navy mb-2">
+                                        <i class="fas fa-info-circle me-2"></i>Additional Documents
+                                    </h6>
+                                    <p class="text-muted mb-0">Our team will contact you if additional documents are required for your application. Thank you for your patience during the review process.</p>
+                                </div>
+                                
+                                <!-- Document Completion Status -->
+                                <div class="mt-4">
+                                    <h6 class="text-navy mb-3">
+                                        <i class="fas fa-file-check me-2"></i>Document Status
+                                    </h6>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-sea-green" role="progressbar" 
+                                             style="width: {{ crew_member.get_profile_completion_percentage() }}%"
+                                             aria-valuenow="{{ crew_member.get_profile_completion_percentage() }}" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            {{ crew_member.get_profile_completion_percentage() }}%
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">Profile completion status</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

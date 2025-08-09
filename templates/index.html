@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100 py-5">
+            <div class="col-lg-6">
+                <h1 class="hero-heading">
+                    Professional Maritime Crew Management
+                </h1>
+                <p class="hero-subheading">
+                    Streamlined recruitment and management solutions for maritime professionals and shipping companies worldwide.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+                    <a href="{{ url_for('register_crew') }}" class="btn btn-sea-green btn-lg px-4 py-3">
+                        <i class="fas fa-user-tie me-2"></i>Register as Crew
+                    </a>
+                    <a href="{{ url_for('register_staff') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                        <i class="fas fa-users me-2"></i>Register as Staff
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="hero-image text-center">
+                    <i class="fas fa-ship text-white" style="font-size: 8rem; opacity: 0.2;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Services Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="fw-bold text-navy">Our Services</h2>
+                <p class="text-muted">Complete maritime workforce solutions</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-user-tie fa-3x text-sea-green"></i>
+                        </div>
+                        <h5 class="fw-bold">Crew Registration</h5>
+                        <p class="text-muted">Register maritime professionals with comprehensive documentation and verification.</p>
+                        <a href="{{ url_for('register_crew') }}" class="btn btn-outline-sea-green">Register as Crew</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-users fa-3x text-sea-green"></i>
+                        </div>
+                        <h5 class="fw-bold">Staff Recruitment</h5>
+                        <p class="text-muted">Find qualified shore-based and office staff for maritime operations.</p>
+                        <a href="{{ url_for('register_staff') }}" class="btn btn-outline-sea-green">Register as Staff</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-search fa-3x text-sea-green"></i>
+                        </div>
+                        <h5 class="fw-bold">Application Tracking</h5>
+                        <p class="text-muted">Track your application status and stay updated on your recruitment progress.</p>
+                        <a href="{{ url_for('track_status') }}" class="btn btn-outline-sea-green">Track Status</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h3 class="fw-bold text-navy mb-4">Why Choose Maricheck?</h3>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-sea-green me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Professional Standards</h6>
+                                <p class="text-muted mb-0">STCW compliant documentation and verification processes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-sea-green me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Global Network</h6>
+                                <p class="text-muted mb-0">Connect with shipping companies worldwide.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-check-circle text-sea-green me-3 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Secure Platform</h6>
+                                <p class="text-muted mb-0">Protected data handling and confidential processing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-globe text-navy" style="font-size: 8rem; opacity: 0.1;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

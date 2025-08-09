@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Crew Registration - Maricheck{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-navy text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-user-tie me-2"></i>
+                        Crew Member Registration
+                    </h2>
+                    <p class="mb-0 mt-2 opacity-75">Join our professional maritime crew network</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data" id="crewRegistrationForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Personal Information Section -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.name.label(class="form-label fw-bold") }}
+                                {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback">{{ form.name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.nationality.label(class="form-label fw-bold") }}
+                                {{ form.nationality(class="form-control" + (" is-invalid" if form.nationality.errors else "")) }}
+                                {% if form.nationality.errors %}
+                                    <div class="invalid-feedback">{{ form.nationality.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.date_of_birth.label(class="form-label fw-bold") }}
+                                {{ form.date_of_birth(class="form-control" + (" is-invalid" if form.date_of_birth.errors else "")) }}
+                                {% if form.date_of_birth.errors %}
+                                    <div class="invalid-feedback">{{ form.date_of_birth.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.passport.label(class="form-label fw-bold") }}
+                                {{ form.passport(class="form-control" + (" is-invalid" if form.passport.errors else "")) }}
+                                {% if form.passport.errors %}
+                                    <div class="invalid-feedback">{{ form.passport.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.mobile_number.label(class="form-label fw-bold") }}
+                                {{ form.mobile_number(class="form-control" + (" is-invalid" if form.mobile_number.errors else ""), id="phone") }}
+                                {% if form.mobile_number.errors %}
+                                    <div class="invalid-feedback">{{ form.mobile_number.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.email.label(class="form-label fw-bold") }}
+                                {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback">{{ form.email.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Professional Information Section -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-ship me-2"></i>Professional Information
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.rank.label(class="form-label fw-bold") }}
+                                {{ form.rank(class="form-select" + (" is-invalid" if form.rank.errors else "")) }}
+                                {% if form.rank.errors %}
+                                    <div class="invalid-feedback">{{ form.rank.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.years_experience.label(class="form-label fw-bold") }}
+                                {{ form.years_experience(class="form-control" + (" is-invalid" if form.years_experience.errors else "")) }}
+                                {% if form.years_experience.errors %}
+                                    <div class="invalid-feedback">{{ form.years_experience.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.last_vessel_type.label(class="form-label fw-bold") }}
+                                {{ form.last_vessel_type(class="form-control" + (" is-invalid" if form.last_vessel_type.errors else "")) }}
+                                {% if form.last_vessel_type.errors %}
+                                    <div class="invalid-feedback">{{ form.last_vessel_type.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.availability_date.label(class="form-label fw-bold") }}
+                                {{ form.availability_date(class="form-control" + (" is-invalid" if form.availability_date.errors else "")) }}
+                                {% if form.availability_date.errors %}
+                                    <div class="invalid-feedback">{{ form.availability_date.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Emergency Contact Section -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-phone me-2"></i>Emergency Contact
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                {{ form.emergency_contact_name.label(class="form-label fw-bold") }}
+                                {{ form.emergency_contact_name(class="form-control" + (" is-invalid" if form.emergency_contact_name.errors else "")) }}
+                                {% if form.emergency_contact_name.errors %}
+                                    <div class="invalid-feedback">{{ form.emergency_contact_name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.emergency_contact_phone.label(class="form-label fw-bold") }}
+                                {{ form.emergency_contact_phone(class="form-control" + (" is-invalid" if form.emergency_contact_phone.errors else "")) }}
+                                {% if form.emergency_contact_phone.errors %}
+                                    <div class="invalid-feedback">{{ form.emergency_contact_phone.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.emergency_contact_relationship.label(class="form-label fw-bold") }}
+                                {{ form.emergency_contact_relationship(class="form-control" + (" is-invalid" if form.emergency_contact_relationship.errors else "")) }}
+                                {% if form.emergency_contact_relationship.errors %}
+                                    <div class="invalid-feedback">{{ form.emergency_contact_relationship.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Core Document Uploads -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-file-upload me-2"></i>Core Documents
+                            </h4>
+                            <p class="text-muted">Upload these essential documents. Additional documents can be uploaded later via your private profile.</p>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.passport_file.label(class="form-label fw-bold") }}
+                                <span class="text-danger">*</span>
+                                {{ form.passport_file(class="form-control" + (" is-invalid" if form.passport_file.errors else "")) }}
+                                {% if form.passport_file.errors %}
+                                    <div class="invalid-feedback">{{ form.passport_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">PDF, JPG, PNG (Max 16MB)</div>
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.cdc_file.label(class="form-label fw-bold") }}
+                                <span class="text-danger">*</span>
+                                {{ form.cdc_file(class="form-control" + (" is-invalid" if form.cdc_file.errors else "")) }}
+                                {% if form.cdc_file.errors %}
+                                    <div class="invalid-feedback">{{ form.cdc_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">PDF, JPG, PNG (Max 16MB)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.resume_file.label(class="form-label fw-bold") }}
+                                <span class="text-danger">*</span>
+                                {{ form.resume_file(class="form-control" + (" is-invalid" if form.resume_file.errors else "")) }}
+                                {% if form.resume_file.errors %}
+                                    <div class="invalid-feedback">{{ form.resume_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">PDF, DOC, DOCX (Max 16MB)</div>
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.photo_file.label(class="form-label fw-bold") }}
+                                <span class="text-danger">*</span>
+                                {{ form.photo_file(class="form-control" + (" is-invalid" if form.photo_file.errors else "")) }}
+                                {% if form.photo_file.errors %}
+                                    <div class="invalid-feedback">{{ form.photo_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">JPG, PNG (Max 16MB)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.medical_certificate_file.label(class="form-label fw-bold") }}
+                                <span class="text-muted">(Optional)</span>
+                                {{ form.medical_certificate_file(class="form-control" + (" is-invalid" if form.medical_certificate_file.errors else "")) }}
+                                {% if form.medical_certificate_file.errors %}
+                                    <div class="invalid-feedback">{{ form.medical_certificate_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">PDF, JPG, PNG (Max 16MB)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Additional Documents:</strong> After registration, you'll receive a private profile link where you can upload remaining documents like COC/COP, STCW certificates, and other required documentation.
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 mt-4">
+                            {{ form.submit(class="btn btn-sea-green btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let phoneInput = null;
+    
+    // Initialize international phone input
+    const phoneInputField = document.querySelector("#mobile_number");
+    if (phoneInputField) {
+        phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                fetch('https://ipapi.co/json')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { callback(data.country_code); })
+                    .catch(function() { callback("in"); });
+            },
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+        });
+        
+        // Update the hidden input with the full number including country code
+        phoneInputField.addEventListener('blur', function() {
+            if (phoneInput) {
+                phoneInputField.value = phoneInput.getNumber();
+            }
+        });
+    }
+    
+    // Form validation
+    const form = document.getElementById('crewRegistrationForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Update phone number before submission
+            if (phoneInput && phoneInputField) {
+                phoneInputField.value = phoneInput.getNumber();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

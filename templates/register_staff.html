@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Registration - Maricheck{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-navy text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Staff Member Registration
+                    </h2>
+                    <p class="mb-0 mt-2 opacity-75">Join our shore-based maritime team</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data" id="staffRegistrationForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Personal Information Section -->
+                        <div class="section-header mb-4">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.full_name.label(class="form-label fw-bold") }}
+                                {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else "")) }}
+                                {% if form.full_name.errors %}
+                                    <div class="invalid-feedback">{{ form.full_name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.email_or_whatsapp.label(class="form-label fw-bold") }}
+                                {{ form.email_or_whatsapp(class="form-control" + (" is-invalid" if form.email_or_whatsapp.errors else "")) }}
+                                {% if form.email_or_whatsapp.errors %}
+                                    <div class="invalid-feedback">{{ form.email_or_whatsapp.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.mobile_number.label(class="form-label fw-bold") }}
+                                {{ form.mobile_number(class="form-control" + (" is-invalid" if form.mobile_number.errors else ""), id="phone") }}
+                                {% if form.mobile_number.errors %}
+                                    <div class="invalid-feedback">{{ form.mobile_number.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.location.label(class="form-label fw-bold") }}
+                                {{ form.location(class="form-control" + (" is-invalid" if form.location.errors else "")) }}
+                                {% if form.location.errors %}
+                                    <div class="invalid-feedback">{{ form.location.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Professional Information Section -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-briefcase me-2"></i>Professional Information
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.position_applying.label(class="form-label fw-bold") }}
+                                {{ form.position_applying(class="form-control" + (" is-invalid" if form.position_applying.errors else "")) }}
+                                {% if form.position_applying.errors %}
+                                    <div class="invalid-feedback">{{ form.position_applying.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.department.label(class="form-label fw-bold") }}
+                                {{ form.department(class="form-select" + (" is-invalid" if form.department.errors else "")) }}
+                                {% if form.department.errors %}
+                                    <div class="invalid-feedback">{{ form.department.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.years_experience.label(class="form-label fw-bold") }}
+                                {{ form.years_experience(class="form-control" + (" is-invalid" if form.years_experience.errors else "")) }}
+                                {% if form.years_experience.errors %}
+                                    <div class="invalid-feedback">{{ form.years_experience.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.current_employer.label(class="form-label fw-bold") }}
+                                {{ form.current_employer(class="form-control" + (" is-invalid" if form.current_employer.errors else "")) }}
+                                {% if form.current_employer.errors %}
+                                    <div class="invalid-feedback">{{ form.current_employer.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.availability_date.label(class="form-label fw-bold") }}
+                                {{ form.availability_date(class="form-control" + (" is-invalid" if form.availability_date.errors else "")) }}
+                                {% if form.availability_date.errors %}
+                                    <div class="invalid-feedback">{{ form.availability_date.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.salary_expectation.label(class="form-label fw-bold") }}
+                                {{ form.salary_expectation(class="form-control" + (" is-invalid" if form.salary_expectation.errors else "")) }}
+                                {% if form.salary_expectation.errors %}
+                                    <div class="invalid-feedback">{{ form.salary_expectation.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Information -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-graduation-cap me-2"></i>Additional Information
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                {{ form.education.label(class="form-label fw-bold") }}
+                                {{ form.education(class="form-control" + (" is-invalid" if form.education.errors else "")) }}
+                                {% if form.education.errors %}
+                                    <div class="invalid-feedback">{{ form.education.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                {{ form.certifications.label(class="form-label fw-bold") }}
+                                {{ form.certifications(class="form-control" + (" is-invalid" if form.certifications.errors else ""), rows="3") }}
+                                {% if form.certifications.errors %}
+                                    <div class="invalid-feedback">{{ form.certifications.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Document Uploads -->
+                        <div class="section-header mb-4 mt-5">
+                            <h4 class="text-navy mb-3">
+                                <i class="fas fa-file-upload me-2"></i>Document Uploads
+                            </h4>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                {{ form.resume_file.label(class="form-label fw-bold") }}
+                                {{ form.resume_file(class="form-control" + (" is-invalid" if form.resume_file.errors else "")) }}
+                                {% if form.resume_file.errors %}
+                                    <div class="invalid-feedback">{{ form.resume_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">PDF, DOC, DOCX (Max 16MB)</div>
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.photo_file.label(class="form-label fw-bold") }}
+                                {{ form.photo_file(class="form-control" + (" is-invalid" if form.photo_file.errors else "")) }}
+                                {% if form.photo_file.errors %}
+                                    <div class="invalid-feedback">{{ form.photo_file.errors[0] }}</div>
+                                {% endif %}
+                                <div class="form-text">JPG, PNG (Max 16MB)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 mt-4">
+                            {{ form.submit(class="btn btn-sea-green btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize international phone input
+    const phoneInputField = document.querySelector("#phone");
+    if (phoneInputField) {
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                fetch('https://ipapi.co/json')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { callback(data.country_code); })
+                    .catch(function() { callback("in"); });
+            },
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+        });
+        
+        // Update the hidden input with the full number including country code
+        phoneInputField.addEventListener('blur', function() {
+            phoneInputField.value = phoneInput.getNumber();
+        });
+    }
+    
+    // Form validation
+    const form = document.getElementById('staffRegistrationForm');
+    form.addEventListener('submit', function(e) {
+        // Update phone number before submission
+        if (phoneInput) {
+            phoneInputField.value = phoneInput.getNumber();
+        }
+    });
+});
+</script>
+{% endblock %}

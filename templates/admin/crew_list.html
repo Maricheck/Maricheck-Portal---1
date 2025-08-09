@@ -1,0 +1,184 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 text-navy mb-0">
+                <i class="fas fa-users me-2"></i>Crew Members
+            </h1>
+            <a href="{{ url_for('export_crew_csv') }}" class="btn btn-outline-primary">
+                <i class="fas fa-download me-1"></i>Export CSV
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" name="search" class="form-control" 
+                       placeholder="Name, passport, or rank..." 
+                       value="{{ search }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Status Filter</label>
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="0" {{ 'selected' if status_filter == '0' }}>Registered</option>
+                    <option value="1" {{ 'selected' if status_filter == '1' }}>Screening</option>
+                    <option value="2" {{ 'selected' if status_filter == '2' }}>Documents Verified</option>
+                    <option value="3" {{ 'selected' if status_filter == '3' }}>Approved</option>
+                    <option value="-1" {{ 'selected' if status_filter == '-1' }}>Rejected</option>
+                    <option value="-2" {{ 'selected' if status_filter == '-2' }}>Flagged</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-1"></i>Filter
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url_for('crew_list') }}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-times me-1"></i>Clear
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Crew List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        {% if crew_members %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th class="d-none d-md-table-cell">Rank</th>
+                        <th>Passport</th>
+                        <th class="d-none d-lg-table-cell">Nationality</th>
+                        <th class="d-none d-lg-table-cell">Experience</th>
+                        <th>Status</th>
+                        <th class="d-none d-md-table-cell">Completion</th>
+                        <th class="d-none d-sm-table-cell">Upload Link</th>
+                        <th class="d-none d-lg-table-cell">Registered</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for crew in crew_members %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-2">
+                                    {{ crew.name[0] }}
+                                </div>
+                                <div>
+                                    <strong>{{ crew.name }}</strong>
+                                    <br><small class="text-muted">{{ crew.email }}</small>
+                                    <!-- Show mobile-only info -->
+                                    <div class="d-md-none">
+                                        <small class="text-muted d-block">{{ crew.rank }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="d-none d-md-table-cell">{{ crew.rank }}</td>
+                        <td><code class="small">{{ crew.passport }}</code></td>
+                        <td class="d-none d-lg-table-cell">{{ crew.nationality }}</td>
+                        <td class="d-none d-lg-table-cell">{{ crew.years_experience }} years</td>
+                        <td>
+                            <span class="badge bg-{{ crew.get_status_class() }} small">
+                                <span class="d-none d-sm-inline">{{ crew.get_status_name() }}</span>
+                                <span class="d-sm-none">{{ crew.get_status_name()[:3] }}</span>
+                            </span>
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-sea-green" role="progressbar" 
+                                     style="width: {{ crew.get_profile_completion_percentage() }}%"
+                                     title="{{ crew.get_profile_completion_percentage() }}% complete">
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ crew.get_profile_completion_percentage() }}%</small>
+                        </td>
+                        <td class="d-none d-sm-table-cell">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control small" 
+                                       value="{{ url_for('crew_private_profile', crew_id=crew.id, token=crew.generate_profile_token(), _external=True) }}" 
+                                       readonly id="profileUrl{{ crew.id }}" style="max-width: 200px;">
+                                <button class="btn btn-outline-secondary" type="button" 
+                                        onclick="copyProfileUrl({{ crew.id }})" 
+                                        title="Copy private upload link">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="d-none d-lg-table-cell">
+                            <small class="text-muted">
+                                {{ crew.created_at.strftime('%b %d, %Y') }}
+                            </small>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('crew_profile', crew_id=crew.id) }}" 
+                                   class="btn btn-sm btn-outline-primary" title="View Profile">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <!-- Mobile copy button -->
+                                <button class="btn btn-sm btn-outline-secondary d-sm-none" 
+                                        onclick="copyProfileUrl({{ crew.id }})" 
+                                        title="Copy Link">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No crew members found</h5>
+            <p class="text-muted">Try adjusting your search criteria or clear filters.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyProfileUrl(crewId) {
+    const urlInput = document.getElementById('profileUrl' + crewId);
+    urlInput.select();
+    urlInput.setSelectionRange(0, 99999);
+    
+    try {
+        document.execCommand('copy');
+        
+        // Show success feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-secondary');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Profile Header -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-navy text-white">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="mb-1">
+                            <i class="fas fa-user-tie me-2"></i>
+                            {{ crew_member.name }}
+                        </h3>
+                        <p class="mb-0 opacity-75">{{ crew_member.rank }} | {{ crew_member.passport }}</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <span class="badge bg-{{ crew_member.get_status_class() }} fs-6 px-3 py-2">
+                            {{ crew_member.get_status_name() }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-navy mb-2">Profile Completion</h6>
+                        <div class="progress mb-2" style="height: 10px;">
+                            <div class="progress-bar bg-sea-green" role="progressbar" 
+                                 style="width: {{ crew_member.get_profile_completion_percentage() }}%"
+                                 aria-valuenow="{{ crew_member.get_profile_completion_percentage() }}" 
+                                 aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <small class="text-muted">{{ crew_member.get_profile_completion_percentage() }}% complete</small>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <small class="text-muted">
+                            Registered: {{ crew_member.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                            {% if crew_member.updated_at != crew_member.created_at %}
+                            <br>Updated: {{ crew_member.updated_at.strftime('%B %d, %Y at %I:%M %p') }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Private Upload Link -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0 text-navy">
+                    <i class="fas fa-link me-2"></i>Private Upload Link
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">Share this secure link with the crew member to upload additional documents:</p>
+                <div class="row g-2">
+                    <div class="col-12 col-md-8">
+                        <input type="text" class="form-control" 
+                               value="{{ url_for('crew_private_profile', crew_id=crew_member.id, token=crew_member.generate_profile_token(), _external=True) }}" 
+                               readonly id="privateProfileUrl">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <button class="btn btn-outline-sea-green w-100" type="button" onclick="copyPrivateUrl()">
+                            <i class="fas fa-copy me-1 d-none d-sm-inline"></i>
+                            <span class="d-none d-sm-inline">Copy</span>
+                            <i class="fas fa-copy d-sm-none"></i>
+                        </button>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <a href="{{ url_for('crew_private_profile', crew_id=crew_member.id, token=crew_member.profile_token) }}" 
+                           target="_blank" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-external-link-alt me-1 d-none d-sm-inline"></i>
+                            <span class="d-none d-sm-inline">View</span>
+                            <i class="fas fa-external-link-alt d-sm-none"></i>
+                        </a>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">This link is secure and unique to this crew member.</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Personal Information -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-navy">
+                            <i class="fas fa-user me-2"></i>Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <strong>Full Name:</strong> {{ crew_member.name }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Nationality:</strong> {{ crew_member.nationality }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Date of Birth:</strong> {{ crew_member.date_of_birth.strftime('%B %d, %Y') }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Passport Number:</strong> <code>{{ crew_member.passport }}</code>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Mobile Number:</strong> {{ crew_member.mobile_number }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Email:</strong> {{ crew_member.email }}
+                            </div>
+                        </div>
+                        
+                        {% if crew_member.emergency_contact_name %}
+                        <hr class="my-4">
+                        <h6 class="text-navy mb-3">Emergency Contact</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <strong>Name:</strong> {{ crew_member.emergency_contact_name }}
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Phone:</strong> {{ crew_member.emergency_contact_phone }}
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Relationship:</strong> {{ crew_member.emergency_contact_relationship }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Professional Information -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-navy">
+                            <i class="fas fa-ship me-2"></i>Professional Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <strong>Rank/Position:</strong> {{ crew_member.rank }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Years of Experience:</strong> {{ crew_member.years_experience }}
+                            </div>
+                            {% if crew_member.last_vessel_type %}
+                            <div class="col-md-6">
+                                <strong>Last Vessel Type:</strong> {{ crew_member.last_vessel_type }}
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                                <strong>Availability Date:</strong> {{ crew_member.availability_date.strftime('%B %d, %Y') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Tab -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-navy">
+                            <i class="fas fa-file-alt me-2"></i>Documents Overview
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% set documents = crew_member.get_required_documents() %}
+                        <div class="row g-3">
+                            {% for doc in documents %}
+                            <div class="col-md-6">
+                                <div class="document-card p-3 border rounded {{ 'bg-success bg-opacity-10 border-success' if doc.uploaded else 'bg-warning bg-opacity-10 border-warning' }}">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h6 class="mb-0">
+                                            {{ doc.name }}
+                                            {% if doc.required %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </h6>
+                                        {% if doc.uploaded %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Uploaded
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-times"></i> Missing
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <small class="text-muted d-block mb-2">
+                                        {{ 'Required Document' if doc.required else 'Optional Document' }}
+                                    </small>
+                                    
+                                    {% if doc.uploaded %}
+                                    <div class="btn-group btn-group-sm">
+                                        {% set file_path = getattr(crew_member, doc.field) %}
+                                        <a href="{{ url_for('static', filename='uploads/' + file_path) }}" 
+                                           target="_blank" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <button class="btn btn-outline-secondary btn-sm" disabled>
+                                            <i class="fas fa-edit"></i> Replace
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <small class="text-muted">Document not uploaded</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Status Management -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-navy">
+                            <i class="fas fa-cogs me-2"></i>Status Management
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('update_crew_status', crew_id=crew_member.id) }}">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Change Status</label>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" name="action" value="screening" 
+                                            class="btn btn-outline-warning btn-sm">
+                                        <i class="fas fa-search me-1"></i>Move to Screening
+                                    </button>
+                                    <button type="submit" name="action" value="verified" 
+                                            class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-check-double me-1"></i>Documents Verified
+                                    </button>
+                                    <button type="submit" name="action" value="approve" 
+                                            class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-check me-1"></i>Approve
+                                    </button>
+                                    <button type="submit" name="action" value="reject" 
+                                            class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-times me-1"></i>Reject
+                                    </button>
+                                    <button type="submit" name="action" value="flag" 
+                                            class="btn btn-outline-dark btn-sm">
+                                        <i class="fas fa-flag me-1"></i>Flag for Review
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Admin Notes</label>
+                                <textarea name="notes" class="form-control" rows="4" 
+                                          placeholder="Add notes about status change...">{{ crew_member.admin_notes or '' }}</textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Current Notes -->
+                {% if crew_member.admin_notes or crew_member.screening_notes %}
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0 text-navy">
+                            <i class="fas fa-sticky-note me-2"></i>Notes History
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if crew_member.admin_notes %}
+                        <div class="mb-3">
+                            <h6 class="text-primary mb-2">Admin Notes</h6>
+                            <p class="text-muted mb-0">{{ crew_member.admin_notes }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if crew_member.screening_notes %}
+                        <div>
+                            <h6 class="text-warning mb-2">Screening Notes</h6>
+                            <p class="text-muted mb-0">{{ crew_member.screening_notes }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyPrivateUrl() {
+    const urlInput = document.getElementById('privateProfileUrl');
+    urlInput.select();
+    urlInput.setSelectionRange(0, 99999);
+    
+    try {
+        document.execCommand('copy');
+        
+        // Show success feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+        btn.classList.remove('btn-outline-sea-green');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-sea-green');
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
+}
+</script>
+{% endblock %}
